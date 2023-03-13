@@ -1,7 +1,7 @@
 ﻿namespace Cars.Api.Models;
 
-public class UserCredentials
+public class User
 {
-    public string Username { get; set; }
+    public string Login { get; set; }
     public string Password { get; set; }
 }
