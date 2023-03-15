@@ -1,6 +1,6 @@
-﻿namespace Cars.Api.Models;
+﻿namespace Cars.Api.Models.Users;
 
-public class User
+public class UserRequest
 {
     public string Login { get; set; }
     public string Password { get; set; }

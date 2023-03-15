@@ -1,3 +1,8 @@
 .idea/
 Cars.Api/obj/
 WebApplication1/obj/Debug/net6.0/WebApplication1.csproj.CopyComplete
+CarsGatewayService.Api/bin/Debug/net6.0/CarsGatewayService.Api.deps.json
+CarsGatewayService.Api/bin/Debug/net6.0/runtimes/linux-armel/native/libe_sqlite3.so
+CarsGatewayService.Api/bin/
+CarsGatewayService.Api/obj/
+CarsGatewayService.Api/LocalDatabase.db

@@ -1,4 +1,7 @@
+using Cars.Api.Helpers;
 using Cars.Api.Options;
+using Cars.Api.Repositories;
+using Cars.Api.Repositories.Interfaces;
 using Cars.Api.Services;
 using Cars.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,16 +10,24 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<DataContext>();
+builder.Services.AddTransient<IJwtService, JwtService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICarRepository, CarRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICarService, CarService>();
+
 builder.Services.Configure<JwtOptions>(
     builder.Configuration.GetSection(nameof(JwtOptions)));
 
-builder.Services.AddTransient<IJwtService, JwtService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
-    option.SwaggerDoc("v1", new OpenApiInfo {Title = "Demo API", Version = "v1"});
+    option.SwaggerDoc("v1", new OpenApiInfo {Title = "Cars API", Version = "v1"});
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -61,6 +72,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await context.Init();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -71,6 +88,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 

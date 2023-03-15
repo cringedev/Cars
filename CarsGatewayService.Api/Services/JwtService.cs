@@ -17,11 +17,11 @@ public class JwtService : IJwtService
         _options = options.Value;
     }
 
-    public string GenerateToken(string login)
+    public string GenerateToken(int userId)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, "tempLogin")
+            new Claim("UserId", userId.ToString())
         };
         
         var jwt = new JwtSecurityToken(
